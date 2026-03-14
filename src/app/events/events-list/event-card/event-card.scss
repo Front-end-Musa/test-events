@@ -240,3 +240,41 @@
     }
   }
 }
+
+@media (max-width: 768px) {
+  .card {
+    .card-banner {
+      min-height: 100px;
+      padding: 0.7rem;
+    }
+
+    .card-body {
+      padding: 0.9rem 0.9rem 1.1rem;
+
+      .title-row {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.4rem;
+
+        .title {
+          font-size: 1.2rem;
+        }
+      }
+
+      .description {
+        font-size: 0.95rem;
+      }
+    }
+  }
+}
+
+@media (max-width: 480px) {
+  .card {
+    .card-body {
+      .event-meta {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+    }
+  }
+}

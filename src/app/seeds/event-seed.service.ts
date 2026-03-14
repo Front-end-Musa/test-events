@@ -1,4 +1,4 @@
-import { Injectable, isDevMode } from '@angular/core';
+import { Injectable } from '@angular/core';
 import { EventService } from '../services/event.service';
 import { SEED_EVENTS } from './seed-events';
 import { defaultSeedConfig } from './seed-config';
@@ -28,16 +28,7 @@ export class EventSeedService {
   }
 
   private shouldSeed(): boolean {
-    if (!defaultSeedConfig.seedEvents) {
-      return false;
-    }
-
-    // In case you later want prod to behave differently, keep this hook.
-    if (!isDevMode()) {
-      return false;
-    }
-
-    return true;
+    return defaultSeedConfig.seedEvents;
   }
 }
 

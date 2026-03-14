@@ -1,0 +1,55 @@
+import { EventISO } from '../models/event.model';
+
+export const SEED_EVENTS: EventISO[] = [
+  {
+    id: 1,
+    title: 'Angular Best Practices Conference',
+    description: 'A full-day conference covering advanced Angular patterns and performance tips.',
+    date: '2026-04-10',
+    category: 'Conference',
+    status: 'Planned',
+    favorite: true,
+    registered: true,
+  },
+  {
+    id: 2,
+    title: 'NgRx in Action Webinar',
+    description: 'Live coding session on structuring NgRx stores and effects in large apps.',
+    date: '2026-04-18',
+    category: 'Webinar',
+    status: 'Planned',
+    favorite: false,
+    registered: false,
+  },
+  {
+    id: 3,
+    title: 'Frontend Architecture Roundtable',
+    description: 'Small-group discussion about scalable frontend architectures.',
+    date: '2026-05-02',
+    category: 'Meeting',
+    status: 'Planned',
+    favorite: false,
+    registered: false,
+  },
+  {
+    id: 4,
+    title: 'TypeScript Deep Dive',
+    description: 'Hands-on workshop exploring advanced TypeScript types and tooling.',
+    date: '2026-05-15',
+    category: 'Conference',
+    status: 'Planned',
+    favorite: true,
+    registered: false,
+  },
+  {
+    id: 5,
+    title: 'Past Project Retrospective',
+    description: 'Review of a completed project with focus on lessons learned.',
+    date: '2026-03-01',
+    category: 'Meeting',
+    status: 'Completed',
+    favorite: false,
+    registered: true,
+  },
+];
+

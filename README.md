@@ -52,6 +52,18 @@ For end-to-end (e2e) testing, run:
 ng e2e
 ```
 
+## Seed events
+
+For local development, the app can automatically populate a set of sample events:
+
+- Seed data lives in `src/app/seeds/seed-events.ts` as a typed `SEED_EVENTS` array of `EventISO` objects.
+- Seeding is controlled by `defaultSeedConfig.seedEvents` in `src/app/seeds/seed-config.ts` and additionally only runs in Angular dev mode.
+- On app startup an `APP_INITIALIZER` (configured in `src/app/app.config.ts`) calls `EventSeedService`, which:
+  - Checks `localStorage['events']`.
+  - If it is missing or empty and seeding is enabled, writes `SEED_EVENTS` via `EventService.saveToLocalStorage`.
+
+To re-run seeding, clear the `events` entry from your browser’s `localStorage` (or clear all storage) and reload the app.
+
 Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
 
 ## Additional Resources

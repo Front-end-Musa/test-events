@@ -6,6 +6,8 @@
 // custom components at https://material.angular.dev/guide/theming
 @use '@angular/material' as mat;
 
+/* Global Material theme + design tokens for EventFlow-style UI */
+
 html {
   height: 100%;
   @include mat.theme((
@@ -18,21 +20,194 @@ html {
   ));
 }
 
+:root {
+  /* Core palette approximating EventFlow */
+  --app-color-bg: #0b1020;
+  --app-color-bg-elevated: #0f172a;
+  --app-color-surface: #ffffff;
+  --app-color-surface-soft: #f5f7ff;
+  --app-color-border-subtle: rgba(148, 163, 184, 0.4);
+  --app-color-border-strong: rgba(15, 23, 42, 0.18);
+  --app-color-primary: #2563eb;
+  --app-color-primary-soft: #dbeafe;
+  --app-color-primary-strong: #1d4ed8;
+  --app-color-accent: #22c55e;
+  --app-color-danger: #ef4444;
+  --app-color-text-main: #0f172a;
+  --app-color-text-muted: #6b7280;
+  --app-color-text-inverse: #f9fafb;
+
+  /* Elevation */
+  --app-elev-1: 0 10px 30px rgba(15, 23, 42, 0.18);
+  --app-elev-2: 0 18px 42px rgba(12, 28, 70, 0.22);
+  --app-elev-3:
+    0 18px 45px rgba(15, 23, 42, 0.32),
+    0 0 0 1px rgba(148, 163, 184, 0.2);
+
+  /* Spacing scale */
+  --app-space-1: 4px;
+  --app-space-2: 8px;
+  --app-space-3: 12px;
+  --app-space-4: 16px;
+  --app-space-5: 20px;
+  --app-space-6: 24px;
+
+  /* Radius */
+  --app-radius-pill: 999px;
+  --app-radius-card: 18px;
+
+  /* Breakpoints */
+  --app-break-lg: 1200px;
+  --app-break-md: 900px;
+  --app-break-sm: 600px;
+}
+
 body {
-  // Default the application to a light color theme. This can be changed to
-  // `dark` to enable the dark color theme, or to `light dark` to defer to the
-  // user's system settings.
   color-scheme: light;
-
-  // Set a default background, font and text colors for the application using
-  // Angular Material's system-level CSS variables. Learn more about these
-  // variables at https://material.angular.dev/guide/system-variables
-  background-color: var(--mat-sys-surface);
-  color: var(--mat-sys-on-surface);
-  font: var(--mat-sys-body-medium);
-
-  // Reset the user agent margin.
   margin: 0;
   height: 100%;
+  background:
+    radial-gradient(circle at top left, #111827 0, #020617 55%)
+    fixed;
+  color: var(--app-color-text-inverse);
+  font: var(--mat-sys-body-medium);
 }
-/* You can add global styles to this file, and also import other style files */
+
+/* Generic layout helpers shared across the app */
+
+.app-shell {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  color: var(--app-color-text-inverse);
+}
+
+.app-shell-header {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  backdrop-filter: blur(16px);
+  background:
+    linear-gradient(to right, rgba(15, 23, 42, 0.85), rgba(15, 23, 42, 0.9));
+  border-bottom: 1px solid rgba(148, 163, 184, 0.35);
+}
+
+.app-shell-header-inner {
+  max-width: 1120px;
+  margin: 0 auto;
+  padding: 12px 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--app-space-4);
+}
+
+.app-shell-brand {
+  display: flex;
+  align-items: center;
+  gap: var(--app-space-2);
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  font-size: 0.8rem;
+}
+
+.app-shell-brand-mark {
+  width: 24px;
+  height: 24px;
+  border-radius: 10px;
+  background: radial-gradient(circle at 20% 0, #38bdf8 0, #2563eb 40%, #4f46e5 100%);
+  box-shadow: 0 10px 25px rgba(37, 99, 235, 0.6);
+}
+
+.app-shell-header-actions {
+  display: flex;
+  align-items: center;
+  gap: var(--app-space-2);
+}
+
+.app-shell-main {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  padding: 24px 16px 32px;
+}
+
+.app-shell-main-inner {
+  width: 100%;
+  max-width: 1120px;
+}
+
+/* Shared button + chip + card patterns */
+
+.btn-primary {
+  border: 0;
+  border-radius: var(--app-radius-pill);
+  padding: 9px 16px;
+  background: linear-gradient(135deg, var(--app-color-primary), var(--app-color-primary-strong));
+  color: var(--app-color-text-inverse);
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  box-shadow: 0 10px 30px rgba(37, 99, 235, 0.45);
+  transition:
+    background-color 0.18s ease,
+    box-shadow 0.18s ease,
+    transform 0.08s ease;
+
+  &:hover {
+    background: linear-gradient(135deg, var(--app-color-primary-strong), #1e40af);
+    transform: translateY(-1px);
+    box-shadow: 0 16px 36px rgba(37, 99, 235, 0.6);
+  }
+
+  &:active {
+    transform: translateY(0);
+    box-shadow: 0 8px 20px rgba(37, 99, 235, 0.45);
+  }
+}
+
+.btn-ghost {
+  border-radius: var(--app-radius-pill);
+  border: 1px solid rgba(148, 163, 184, 0.55);
+  background: rgba(15, 23, 42, 0.4);
+  color: var(--app-color-text-inverse);
+  padding: 8px 12px;
+  font-size: 0.85rem;
+  font-weight: 500;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.chip-pill {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 6px 12px;
+  border-radius: var(--app-radius-pill);
+  border: 1px solid rgba(148, 163, 184, 0.5);
+  font-size: 0.78rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.layout-card {
+  border-radius: var(--app-radius-card);
+  background: var(--app-color-surface);
+  box-shadow: var(--app-elev-1);
+  border: 1px solid var(--app-color-border-strong);
+}
+
+@media (max-width: 600px) {
+  .app-shell-header-inner {
+    padding-inline: 14px;
+  }
+
+  .app-shell-main {
+    padding-inline: 12px;
+  }
+}
+

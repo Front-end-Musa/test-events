@@ -1,130 +1,191 @@
 @if (status === 'loading') {
-  <mat-spinner></mat-spinner>
-} @else if (status === 'loaded') {
-  <div class="events-container">
-    <div class="events-header">
-      <h1>Events</h1>
-      <div class="events-tabs">
-        <button
-          type="button"
-          class="tab-button"
-          [ngClass]="{ active: selectedTab === 'all' }"
-          (click)="selectTab('all')"
-        >
-          All Events
-        </button>
-        <button
-          type="button"
-          class="tab-button"
-          [ngClass]="{ active: selectedTab === 'registered' }"
-          (click)="selectTab('registered')"
-        >
-          Registered
-        </button>
-      </div>
-      <div class="search-bar">
-          <mat-icon matPrefix>search</mat-icon>
-          <input
-            matInput
-            [formControl]="searchControl"
-            placeholder="Search events by title, status, or category"
-          />
-          <button
-            mat-icon-button
-            matSuffix
-            *ngIf="searchControl.value"
-            (click)="searchControl.setValue('')"
-            aria-label="Clear search"
-          >
-            <mat-icon>close</mat-icon>
-          </button>
-      </div>
-      <div class="header-buttons">
-        <div class="result-adjust-btn filters-toggle" (click)="toggleFilter()">
-          <mat-icon>filter_list</mat-icon>
-        </div>
-        <div class="result-adjust-btn sort" (click)="toggleSortMenu()">
-          <mat-icon>sort_list</mat-icon>
-        </div>
-        <button class="primary" type="button" (click)="openCreateDialog()">Create Event</button>
-      </div>
-    </div>
-
-    <div class="sort-menu" *ngIf="sortMenuOpen">
-      <button
-        type="button"
-        class="sort-option"
-        (click)="setSortMode('title-asc')"
-        [ngClass]="{ active: sortMode === 'title-asc' }"
-      >
-        A → Z
-      </button>
-      <button
-        type="button"
-        class="sort-option"
-        (click)="setSortMode('title-desc')"
-        [ngClass]="{ active: sortMode === 'title-desc' }"
-      >
-        Z → A
-      </button>
-      <button
-        type="button"
-        class="sort-option"
-        (click)="setSortMode('date-desc')"
-        [ngClass]="{ active: sortMode === 'date-desc' }"
-      >
-        Date: New → Old
-      </button>
-      <button
-        type="button"
-        class="sort-option"
-        (click)="setSortMode('date-asc')"
-        [ngClass]="{ active: sortMode === 'date-asc' }"
-      >
-        Date: Old → New
-      </button>
-    </div>
-
-    <div class="filter" *ngIf="filterOpen">
-      <div class="filter-status filters-item">
-        @for (statusType of eventStatusTypes; track $index) {
-          <button
-            class="filter-choice"
-            type="button"
-            (click)="selectStatus(statusType)"
-            [ngClass]="{ active: selectedStatusType === statusType }"
-          >
-            {{ statusType }}
-          </button>
-        }
-      </div>
-      <div class="filters-divider"></div>
-      <div class="filter-category filters-item">
-        @for (categoryType of eventCategoryTypes; track $index) {
-          <button
-            class="filter-choice"
-            type="button"
-            (click)="selectCategory(categoryType)"
-            [ngClass]="{ active: selectedCategoryType === categoryType }"
-          >
-            {{ categoryType }}
-          </button>
-        }
-      </div>
-    </div>
-
-    <div class="events-list" *ngIf="eventsToShow.length; else noEvents">
-      <app-event-card
-        *ngFor="let event of eventsToShow"
-        [event]="event"
-        (edit)="editEvent($event)"
-      ></app-event-card>
-    </div>
-
-    <ng-template #noEvents>
-      <p>No events found.</p>
-    </ng-template>
+  <div class="events-loading">
+    <mat-spinner></mat-spinner>
   </div>
+} @else if (status === 'loaded') {
+  <section class="events-page layout-card">
+    <header class="events-hero">
+      <div class="events-hero-main">
+        <div>
+          <p class="eyebrow">Overview</p>
+          <h1 class="title">Events</h1>
+          <p class="subtitle">
+            Plan, track, and register for your upcoming sessions in one place.
+          </p>
+        </div>
+        <div class="summary">
+          <span class="summary-count">{{ eventsToShow.length }}</span>
+          <span class="summary-label">events in view</span>
+        </div>
+      </div>
+
+      <div class="events-hero-toolbar">
+        <div class="tabs">
+          <button
+            type="button"
+            class="tab-button"
+            [ngClass]="{ active: selectedTab === 'all' }"
+            (click)="selectTab('all')"
+          >
+            All Events
+          </button>
+          <button
+            type="button"
+            class="tab-button"
+            [ngClass]="{ active: selectedTab === 'registered' }"
+            (click)="selectTab('registered')"
+          >
+            Registered
+          </button>
+        </div>
+
+        <div class="hero-actions">
+          <div class="search-bar">
+            <mat-icon matPrefix>search</mat-icon>
+            <input
+              matInput
+              [formControl]="searchControl"
+              placeholder="Search events by title, status, or category"
+            />
+            <button
+              mat-icon-button
+              matSuffix
+              *ngIf="searchControl.value"
+              (click)="searchControl.setValue('')"
+              aria-label="Clear search"
+            >
+              <mat-icon>close</mat-icon>
+            </button>
+          </div>
+
+          <div class="hero-icons">
+            <button
+              type="button"
+              class="icon-chip"
+              (click)="toggleFilter()"
+              aria-label="Toggle filters"
+            >
+              <mat-icon>filter_list</mat-icon>
+            </button>
+            <button
+              type="button"
+              class="icon-chip"
+              (click)="toggleSortMenu()"
+              aria-label="Toggle sorting"
+            >
+              <mat-icon>sort</mat-icon>
+            </button>
+            <button
+              type="button"
+              class="btn-primary"
+              (click)="openCreateDialog()"
+            >
+              Create event
+            </button>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <div class="events-controls">
+      <div class="filters" *ngIf="filterOpen">
+        <div class="filters-group">
+          <span class="filters-label">Status</span>
+          <div class="filters-row">
+            @for (statusType of eventStatusTypes; track $index) {
+              <button
+                class="filter-chip"
+                type="button"
+                (click)="selectStatus(statusType)"
+                [ngClass]="{ active: selectedStatusType === statusType }"
+              >
+                {{ statusType }}
+              </button>
+            }
+          </div>
+        </div>
+
+        <div class="filters-divider"></div>
+
+        <div class="filters-group">
+          <span class="filters-label">Category</span>
+          <div class="filters-row">
+            @for (categoryType of eventCategoryTypes; track $index) {
+              <button
+                class="filter-chip"
+                type="button"
+                (click)="selectCategory(categoryType)"
+                [ngClass]="{ active: selectedCategoryType === categoryType }"
+              >
+                {{ categoryType }}
+              </button>
+            }
+          </div>
+        </div>
+      </div>
+
+      <div class="sort-menu" *ngIf="sortMenuOpen">
+        <button
+          type="button"
+          class="sort-option"
+          (click)="setSortMode('title-asc')"
+          [ngClass]="{ active: sortMode === 'title-asc' }"
+        >
+          A → Z
+        </button>
+        <button
+          type="button"
+          class="sort-option"
+          (click)="setSortMode('title-desc')"
+          [ngClass]="{ active: sortMode === 'title-desc' }"
+        >
+          Z → A
+        </button>
+        <button
+          type="button"
+          class="sort-option"
+          (click)="setSortMode('date-desc')"
+          [ngClass]="{ active: sortMode === 'date-desc' }"
+        >
+          Date: New → Old
+        </button>
+        <button
+          type="button"
+          class="sort-option"
+          (click)="setSortMode('date-asc')"
+          [ngClass]="{ active: sortMode === 'date-asc' }"
+        >
+          Date: Old → New
+        </button>
+      </div>
+    </div>
+
+    <section class="events-grid-section">
+      <div class="events-grid" *ngIf="eventsToShow.length; else noEvents">
+        <app-event-card
+          *ngFor="let event of eventsToShow"
+          [event]="event"
+          (edit)="editEvent($event)"
+        ></app-event-card>
+      </div>
+
+      <ng-template #noEvents>
+        <div class="empty-state">
+          <h2>No events found</h2>
+          <p>
+            Adjust your filters or create a new event to get started.
+          </p>
+          <button
+            type="button"
+            class="btn-primary"
+            (click)="openCreateDialog()"
+          >
+            Create your first event
+          </button>
+        </div>
+      </ng-template>
+    </section>
+  </section>
 
   <app-event-create
     *ngIf="showCreateDialog"
@@ -135,5 +196,7 @@
     (cancel)="closeCreateDialog()"
   ></app-event-create>
 } @else if (status === 'error') {
-  <span>Error loading events</span>
+  <div class="events-error layout-card">
+    <span>Error loading events</span>
+  </div>
 }

@@ -1,1 +1,24 @@
-<router-outlet></router-outlet>
+<div class="app-shell">
+  <header class="app-shell-header">
+    <div class="app-shell-header-inner">
+      <div class="app-shell-brand">
+        <span class="app-shell-brand-mark"></span>
+        <span>EVENTFLOW</span>
+      </div>
+      <div class="app-shell-header-actions">
+        <button type="button" class="btn-ghost">
+          <span>Help</span>
+        </button>
+        <button type="button" class="btn-ghost">
+          <span>Feedback</span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <main class="app-shell-main">
+    <div class="app-shell-main-inner">
+      <router-outlet></router-outlet>
+    </div>
+  </main>
+</div>

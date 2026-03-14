@@ -1,0 +1,123 @@
+.modal-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.4);
+  z-index: 1000;
+}
+
+.modal {
+  position: fixed;
+  z-index: 1001;
+  top: 50%;
+  left: 50%;
+  width: min(95vw, 520px);
+  transform: translate(-50%, -50%);
+  background: linear-gradient(135deg, #f5f7fb, #e4e8f3);
+  border-radius: 16px;
+  box-shadow: 0 10px 30px rgba(15, 23, 42, 0.2);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+.modal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: #ffffff;
+  color: #111827;
+  padding: 16px 20px;
+  border-bottom: 1px solid #d0d7e2;
+}
+
+.modal-header h2 {
+  margin: 0;
+  font-size: 1.1rem;
+  font-weight: 600;
+}
+
+.close-btn {
+  cursor: pointer;
+  border: 0;
+  background: transparent;
+  color: #6b7280;
+  font-size: 1.2rem;
+}
+
+.modal-body {
+  display: grid;
+  gap: 12px;
+  padding: 18px 20px 20px;
+}
+
+.modal-body label {
+  display: grid;
+  gap: 6px;
+  font-size: 0.95rem;
+}
+
+.modal-body input,
+.modal-body textarea,
+.modal-body select {
+  width: 100%;
+  border: 1px solid #cdd3dd;
+  border-radius: 6px;
+  padding: 8px;
+  font-size: 0.95rem;
+  background-color: rgba(255, 255, 255, 0.9);
+}
+
+.modal-body textarea {
+  min-height: 70px;
+  resize: vertical;
+}
+
+.checkbox-ctrl {
+  flex-direction: row;
+  align-items: center;
+  display: inline-flex;
+  gap: 8px;
+}
+
+.error {
+  color: #b81c1c;
+  font-size: 0.82rem;
+}
+
+.button-row {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+  margin-top: 4px;
+}
+
+.button-row button {
+  border: 0;
+  border-radius: 6px;
+  min-width: 90px;
+  padding: 8px 12px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: background-color 0.2s ease, box-shadow 0.2s ease, transform 0.1s ease;
+}
+
+.button-row button.secondary {
+  background: #e5e7eb;
+  color: #1f2937;
+}
+
+.button-row button.primary {
+  background-color: #007bff;
+  color: #ffffff;
+  border-radius: 8px;
+  box-shadow: 0 4px 10px rgba(37, 99, 235, 0.35);
+}
+
+.button-row button.primary:hover {
+  background-color: #0056b3;
+}
+
+.button-row button:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}

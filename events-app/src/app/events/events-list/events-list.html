@@ -1,0 +1,123 @@
+@if (status === 'loading') {
+  <mat-spinner></mat-spinner>
+} @else if (status === 'loaded') {
+  <div class="events-container">
+    <div class="events-header">
+      <h1>Events</h1>
+      <div class="search-bar">
+        <mat-form-field appearance="outline">
+          <mat-icon matPrefix>search</mat-icon>
+          <input
+            matInput
+            [formControl]="searchControl"
+            placeholder="Search events by title, status, or category"
+          />
+          <button
+            mat-icon-button
+            matSuffix
+            *ngIf="searchControl.value"
+            (click)="searchControl.setValue('')"
+            aria-label="Clear search"
+          >
+            <mat-icon>close</mat-icon>
+          </button>
+        </mat-form-field>
+      </div>
+      <div class="header-buttons">
+        <div class="result-adjust-btn filters-toggle" (click)="toggleFilter()">
+          <mat-icon>filter_list</mat-icon>
+        </div>
+        <div class="result-adjust-btn sort" (click)="toggleSortMenu()">
+          <mat-icon>sort_list</mat-icon>
+        </div>
+        <button class="primary" type="button" (click)="openCreateDialog()">Create Event</button>
+      </div>
+    </div>
+
+    <div class="sort-menu" *ngIf="sortMenuOpen">
+      <button
+        type="button"
+        class="sort-option"
+        (click)="setSortMode('title-asc')"
+        [ngClass]="{ active: sortMode === 'title-asc' }"
+      >
+        A → Z
+      </button>
+      <button
+        type="button"
+        class="sort-option"
+        (click)="setSortMode('title-desc')"
+        [ngClass]="{ active: sortMode === 'title-desc' }"
+      >
+        Z → A
+      </button>
+      <button
+        type="button"
+        class="sort-option"
+        (click)="setSortMode('date-desc')"
+        [ngClass]="{ active: sortMode === 'date-desc' }"
+      >
+        Date: New → Old
+      </button>
+      <button
+        type="button"
+        class="sort-option"
+        (click)="setSortMode('date-asc')"
+        [ngClass]="{ active: sortMode === 'date-asc' }"
+      >
+        Date: Old → New
+      </button>
+    </div>
+
+    <div class="filter" *ngIf="filterOpen">
+      <div class="filter-status filters-item">
+        @for (statusType of eventStatusTypes; track $index) {
+          <button
+            class="filter-choice"
+            type="button"
+            (click)="selectStatus(statusType)"
+            [ngClass]="{ active: selectedStatusType === statusType }"
+          >
+            {{ statusType }}
+          </button>
+        }
+      </div>
+      <div class="filters-divider"></div>
+      <div class="filter-category filters-item">
+        @for (categoryType of eventCategoryTypes; track $index) {
+          <button
+            class="filter-choice"
+            type="button"
+            (click)="selectCategory(categoryType)"
+            [ngClass]="{ active: selectedCategoryType === categoryType }"
+          >
+            {{ categoryType }}
+          </button>
+        }
+      </div>
+    </div>
+
+    <div class="events-list" *ngIf="eventsToShow.length; else noEvents">
+      <app-event-card
+        *ngFor="let event of eventsToShow"
+        [event]="event"
+        (edit)="editEvent($event)"
+      ></app-event-card>
+    </div>
+
+    <ng-template #noEvents>
+      <p>No events found.</p>
+    </ng-template>
+  </div>
+
+  <app-event-create
+    *ngIf="showCreateDialog"
+    [mode]="editingEvent ? 'edit' : 'create'"
+    [eventToEdit]="editingEvent || undefined"
+    (saveEvent)="addEvent($event)"
+    (updateEvent)="updateEvent($event)"
+    (cancel)="closeCreateDialog()"
+  ></app-event-create>
+} @else if (status === 'error') {
+  <span>Error loading events</span>
+}

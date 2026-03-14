@@ -44,6 +44,21 @@ export const favoriteEventFailure = createAction(
   props<{ error: string }>(),
 );
 
+export const registerEvent = createAction(
+  '[Events API] Register For Event',
+  props<{ id: number }>(),
+);
+
+export const registerEventSuccess = createAction(
+  '[Events API] Register For Event Success',
+  props<{ id: number; changes: Partial<EventISO> }>(),
+);
+
+export const registerEventFailure = createAction(
+  '[Events API] Register For Event Failure',
+  props<{ error: string }>(),
+);
+
 export const editEvent = createAction('[Events API] Edit An Event', props<EventISO>());
 export const editEventSuccess = createAction(
   '[Events API] Edit An Event Success',

@@ -4,6 +4,24 @@
   <div class="events-container">
     <div class="events-header">
       <h1>Events</h1>
+      <div class="events-tabs">
+        <button
+          type="button"
+          class="tab-button"
+          [ngClass]="{ active: selectedTab === 'all' }"
+          (click)="selectTab('all')"
+        >
+          All Events
+        </button>
+        <button
+          type="button"
+          class="tab-button"
+          [ngClass]="{ active: selectedTab === 'registered' }"
+          (click)="selectTab('registered')"
+        >
+          Registered
+        </button>
+      </div>
       <div class="search-bar">
         <mat-form-field appearance="outline">
           <mat-icon matPrefix>search</mat-icon>

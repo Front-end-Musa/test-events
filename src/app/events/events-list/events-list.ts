@@ -54,6 +54,7 @@ export class EventsList implements OnInit {
   sortMode: 'title-asc' | 'title-desc' | 'date-desc' | 'date-asc' | null = null;
   editingEvent: EventISO | null = null;
   searchControl = new FormControl('');
+  selectedTab: 'all' | 'registered' = 'all';
 
   toggleFilter() {
     this.filterOpen = !this.filterOpen;
@@ -140,7 +141,10 @@ export class EventsList implements OnInit {
   }
 
   get eventsToShow(): EventISO[] {
-    let base: EventISO[] = this.events;
+    let base: EventISO[] =
+      this.selectedTab === 'registered'
+        ? this.events.filter((event) => event.registered)
+        : this.events;
 
     if (this.selectedStatusType) {
       switch (this.selectedStatusType) {
@@ -193,6 +197,10 @@ export class EventsList implements OnInit {
     }
 
     return sorted;
+  }
+
+  selectTab(tab: 'all' | 'registered') {
+    this.selectedTab = tab;
   }
 
   selectStatus(statusType: string) {

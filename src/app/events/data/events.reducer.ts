@@ -19,6 +19,9 @@ import {
   searchEventsFailure,
   searchEventsSuccess,
   searchEvents,
+  registerEvent,
+  registerEventSuccess,
+  registerEventFailure,
 } from './events.actions';
 
 export interface EventsState extends EntityState<EventISO> {
@@ -87,6 +90,22 @@ export const eventsReducer = createReducer(
     return eventsAdapter.updateOne(update, { ...state, status: 'loaded', error: null });
   }),
   on(favoriteEventFailure, (state, { error }) => ({
+    ...state,
+    status: 'error',
+    error: error,
+  })),
+  on(registerEvent, (state) => ({
+    ...state,
+    status: 'loading',
+    error: null,
+  })),
+  on(registerEventSuccess, (state, { id, changes }) =>
+    eventsAdapter.updateOne(
+      { id, changes },
+      { ...state, status: 'loaded', error: null },
+    ),
+  ),
+  on(registerEventFailure, (state, { error }) => ({
     ...state,
     status: 'error',
     error: error,

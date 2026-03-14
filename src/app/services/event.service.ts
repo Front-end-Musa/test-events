@@ -91,6 +91,26 @@ export class EventService {
     return of({ N: id, F: updatedEvent.favorite });
   }
 
+  registerEvent(id: number): Observable<EventISO | null> {
+    const currentEvents: EventISO[] = this.eventsSubject.value;
+    const currentEvent: EventISO | undefined = currentEvents.find((event) => event.id === id);
+
+    if (!currentEvent) {
+      return of(null);
+    }
+
+    const updatedEvent: EventISO = {
+      ...currentEvent,
+      registered: true,
+    };
+
+    const updatedEvents = currentEvents.map((event) => (event.id === id ? updatedEvent : event));
+
+    this.saveToLocalStorage(updatedEvents);
+
+    return of(updatedEvent);
+  }
+
   searchEvents(searchTerm: string): Observable<EventISO[]> {
     return this.events$.pipe(
       map((events) =>

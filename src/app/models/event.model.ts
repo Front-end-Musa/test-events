@@ -6,4 +6,5 @@ export interface EventISO {
   category: 'Conference' | 'Webinar' | 'Meeting' | string;
   status: 'Planned' | 'Completed' | 'Canceled' | string;
   favorite: boolean;
+  registered?: boolean;
 }

@@ -43,4 +43,10 @@ export class EventCard {
   favoriteItem() {
     this.eventsFacade.favoriteEvent(this.event.id);
   }
+
+  register(): void {
+    if (!this.event.registered) {
+      this.eventsFacade.registerEvent(this.event.id);
+    }
+  }
 }

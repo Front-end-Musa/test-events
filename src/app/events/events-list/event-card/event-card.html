@@ -52,6 +52,13 @@
 
     <p class="description">{{ event.description || 'No description available' }}</p>
 
-    <button type="button" class="register">Register Now</button>
+    <button
+      type="button"
+      class="register"
+      [disabled]="event.registered"
+      (click)="register()"
+    >
+      {{ event.registered ? 'Registered' : 'Register Now' }}
+    </button>
   </div>
 </div>

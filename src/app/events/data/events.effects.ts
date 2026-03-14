@@ -20,6 +20,9 @@ import {
   searchEvents,
   searchEventsFailure,
   searchEventsSuccess,
+  registerEvent,
+  registerEventFailure,
+  registerEventSuccess,
 } from './events.actions';
 import { catchError, map, of, switchMap } from 'rxjs';
 
@@ -95,6 +98,22 @@ export class EventsEffects {
         this.eventsService.searchEvents(searchTerm).pipe(
           map((events) => searchEventsSuccess({ searchTerm, events })),
           catchError((err) => of(searchEventsFailure({ error: err }))),
+        ),
+      ),
+    );
+  });
+
+  registerEventEffect$ = createEffect(() => {
+    return this.actions$.pipe(
+      ofType(registerEvent),
+      switchMap(({ id }) =>
+        this.eventsService.registerEvent(id).pipe(
+          map((event) =>
+            event
+              ? registerEventSuccess({ id: event.id, changes: { registered: event.registered } })
+              : registerEventFailure({ error: 'Event not found' }),
+          ),
+          catchError((err) => of(registerEventFailure({ error: err }))),
         ),
       ),
     );

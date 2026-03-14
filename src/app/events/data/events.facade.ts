@@ -10,7 +10,15 @@ import {
   selectStatus,
   selectWebinar,
 } from './events.selectors';
-import { createEvent, deleteEvent, editEvent, favoriteEvent, loadEvents, searchEvents } from './events.actions';
+import {
+  createEvent,
+  deleteEvent,
+  editEvent,
+  favoriteEvent,
+  loadEvents,
+  searchEvents,
+  registerEvent,
+} from './events.actions';
 import { EventISO } from '../../models/event.model';
 
 @Injectable({ providedIn: 'root' })
@@ -39,6 +47,10 @@ export class EventsFacade {
 
   favoriteEvent(itemId: number) {
     this.store.dispatch(favoriteEvent({ id: itemId }));
+  }
+
+  registerEvent(itemId: number) {
+    this.store.dispatch(registerEvent({ id: itemId }));
   }
 
   editEvent(event: EventISO) {

@@ -1,55 +1,133 @@
 <div class="modal-backdrop" (click)="close()"></div>
-<div class="modal" role="dialog" aria-modal="true">
+<div
+  class="modal"
+  role="dialog"
+  aria-modal="true"
+  [attr.aria-labelledby]="'eventDialogTitle'"
+>
   <div class="modal-header">
-    <h2>{{ mode === 'edit' ? 'Edit Event' : 'Create Event' }}</h2>
-    <button type="button" class="close-btn" (click)="close()">✕</button>
+    <div class="modal-header-text">
+      <h2 id="eventDialogTitle">
+        {{ mode === 'edit' ? 'Edit event' : 'Create event' }}
+      </h2>
+      <p class="modal-subtitle">
+        Capture the key details so your event stays clear and organized.
+      </p>
+    </div>
+    <button
+      type="button"
+      class="icon-button"
+      aria-label="Close event dialog"
+      (click)="close()"
+    >
+      ✕
+    </button>
   </div>
 
-  <form [formGroup]="form" (ngSubmit)="submit()" class="modal-body">
-    <label>
-      Title
-      <input formControlName="title" placeholder="Event title" />
-      <small *ngIf="form.get('title')?.invalid && form.get('title')?.touched" class="error">
-        Title is required (min 3 characters)
-      </small>
-    </label>
+  <form
+    [formGroup]="form"
+    (ngSubmit)="submit()"
+    class="modal-content"
+    novalidate
+  >
+    <div class="modal-body">
+      <section class="form-section">
+        <h3 class="form-section-title">Primary details</h3>
 
-    <label>
-      Description
-      <textarea formControlName="description" placeholder="Event description"></textarea>
-    </label>
+        <div class="form-grid">
+          <div class="form-field form-field-full">
+            <label for="title">Title</label>
+            <input
+              id="title"
+              formControlName="title"
+              placeholder="Give your event a clear name"
+              [class.invalid]="form.get('title')?.invalid && form.get('title')?.touched"
+            />
+            <small
+              *ngIf="form.get('title')?.invalid && form.get('title')?.touched"
+              class="field-message field-message--error"
+            >
+              Title is required and should be at least 3 characters.
+            </small>
+          </div>
 
-    <label>
-      Date & Time
-      <input formControlName="date" type="datetime-local" />
-      <small *ngIf="form.get('date')?.invalid && form.get('date')?.touched" class="error">
-        Date is required
-      </small>
-    </label>
+          <div class="form-field">
+            <label for="date">Date &amp; time</label>
+            <input
+              id="date"
+              formControlName="date"
+              type="datetime-local"
+              [class.invalid]="form.get('date')?.invalid && form.get('date')?.touched"
+            />
+            <small
+              *ngIf="form.get('date')?.invalid && form.get('date')?.touched"
+              class="field-message field-message--error"
+            >
+              Please choose when this event takes place.
+            </small>
+          </div>
 
-    <label>
-      Category
-      <select formControlName="category">
-        <option *ngFor="let category of categories" [value]="category">{{ category }}</option>
-      </select>
-    </label>
+          <div class="form-field">
+            <label for="category">Category</label>
+            <select id="category" formControlName="category">
+              <option *ngFor="let category of categories" [value]="category">
+                {{ category }}
+              </option>
+            </select>
+          </div>
 
-    <label>
-      Status
-      <select formControlName="status">
-        <option *ngFor="let status of statuses" [value]="status">{{ status }}</option>
-      </select>
-    </label>
+          <div class="form-field">
+            <label for="status">Status</label>
+            <select id="status" formControlName="status">
+              <option *ngFor="let status of statuses" [value]="status">
+                {{ status }}
+              </option>
+            </select>
+          </div>
+        </div>
+      </section>
 
-    <label class="checkbox-ctrl">
-      <input type="checkbox" formControlName="favorite" />
-      Favorite
-    </label>
+      <section class="form-section">
+        <h3 class="form-section-title">Additional details</h3>
 
-    <div class="button-row">
-      <button type="button" class="secondary" (click)="close()">Cancel</button>
-      <button type="submit" [disabled]="form.invalid">
-        {{ mode === 'edit' ? 'Update' : 'Create' }}
+        <div class="form-field form-field-full">
+          <label for="description">
+            Description
+            <span class="field-optional">(optional)</span>
+          </label>
+          <textarea
+            id="description"
+            formControlName="description"
+            placeholder="Share context, agenda, or anything attendees should know"
+          ></textarea>
+        </div>
+
+        <div class="form-field form-field-inline">
+          <label class="checkbox-ctrl">
+            <input type="checkbox" formControlName="favorite" />
+            <span>Mark as favorite</span>
+          </label>
+          <p class="field-message">
+            Favorites are highlighted in your events list for quick access.
+          </p>
+        </div>
+      </section>
+    </div>
+
+    <div class="modal-footer">
+      <button
+        type="button"
+        class="btn secondary"
+        (click)="close()"
+      >
+        Cancel
+      </button>
+      <button
+        type="submit"
+        class="btn primary"
+        [disabled]="form.invalid"
+      >
+        {{ mode === 'edit' ? 'Save changes' : 'Create event' }}
       </button>
     </div>
   </form>

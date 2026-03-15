@@ -1,4 +1,13 @@
-import { Component, EventEmitter, inject, Input, Output } from '@angular/core';
+import {
+  Component,
+  ElementRef,
+  EventEmitter,
+  HostListener,
+  inject,
+  Input,
+  Output,
+  ViewChild,
+} from '@angular/core';
 import { EventISO } from '../../../models/event.model';
 import { CommonModule, DatePipe } from '@angular/common';
 import { EventsFacade } from '../../data/events.facade';
@@ -14,7 +23,20 @@ export class EventCard {
   @Output() edit = new EventEmitter<EventISO>();
   private eventsFacade = inject(EventsFacade);
 
+  @ViewChild('menuHost') menuHostRef!: ElementRef<HTMLElement>;
+
   isMenuOpen = false;
+
+  @HostListener('document:click', ['$event'])
+  onDocumentClick(event: MouseEvent): void {
+    if (
+      this.isMenuOpen &&
+      this.menuHostRef?.nativeElement &&
+      !this.menuHostRef.nativeElement.contains(event.target as Node)
+    ) {
+      this.closeMenu();
+    }
+  }
 
   get date(): Date {
     return this.event ? new Date(this.event.date) : new Date(0);

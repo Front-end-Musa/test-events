@@ -275,7 +275,12 @@
 .events-grid {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
+  align-items: stretch;
   gap: 18px;
+
+  app-event-card {
+    min-height: 0;
+  }
 }
 
 .empty-state {
@@ -337,7 +342,7 @@
   }
 }
 
-@media (max-width: 600px) {
+@media (max-width: 620px) {
   .events-page {
     padding: 18px 14px 20px;
   }

@@ -8,56 +8,53 @@
   </div>
 
   <div class="card-body">
-    <div class="title-row">
-      <h2 class="title">{{ event.title }}</h2>
+    <div class="card-info">
+      <div class="title-row">
+        <h2 class="title">{{ event.title }}</h2>
 
-      <div class="actions-wrap" (click)="$event.stopPropagation()">
-        <button
-          class="favorite"
-          [class.active]="event.favorite"
-          aria-label="Favorite event"
-          type="button"
-          (click)="favoriteItem()"
-        >
-          ★
-        </button>
-        <button class="more" aria-label="Open event menu" type="button" (click)="toggleMenu()">
-          ⋮
-        </button>
-
-        <div class="menu" *ngIf="isMenuOpen" role="menu">
-          <button class="menu-item" type="button" (click)="onEdit()" aria-label="Edit event">
-            ✎ Edit
-          </button>
+        <div class="actions-wrap" (click)="$event.stopPropagation()">
           <button
-            class="menu-item danger"
+            class="favorite"
+            [class.active]="event.favorite"
+            aria-label="Favorite event"
             type="button"
-            (click)="onDelete()"
-            aria-label="Delete event"
+            (click)="favoriteItem()"
           >
-            🗑 Delete
+            ★
           </button>
+          <button class="more" aria-label="Open event menu" type="button" (click)="toggleMenu()">
+            ⋮
+          </button>
+
+          <div class="menu" *ngIf="isMenuOpen" role="menu">
+            <button class="menu-item" type="button" (click)="onEdit()" aria-label="Edit event">
+              ✎ Edit
+            </button>
+            <button
+              class="menu-item danger"
+              type="button"
+              (click)="onDelete()"
+              aria-label="Delete event"
+            >
+              🗑 Delete
+            </button>
+          </div>
         </div>
       </div>
+
+      <div class="chip-row">
+        <span class="chip category">{{ event.category || 'General' }}</span>
+        <span class="chip status">{{ event.status || 'Planned' }}</span>
+      </div>
+
+      <div class="event-meta">
+        <span class="time">{{ date | date: 'h:mm a' }}</span>
+      </div>
+
+      <p class="description">{{ event.description || 'No description available' }}</p>
     </div>
 
-    <div class="chip-row">
-      <span class="chip category">{{ event.category || 'General' }}</span>
-      <span class="chip status">{{ event.status || 'Planned' }}</span>
-    </div>
-
-    <div class="event-meta">
-      <span class="time">{{ date | date: 'h:mm a' }}</span>
-    </div>
-
-    <p class="description">{{ event.description || 'No description available' }}</p>
-
-    <button
-      type="button"
-      class="register"
-      [disabled]="event.registered"
-      (click)="register()"
-    >
+    <button type="button" class="register" [disabled]="event.registered" (click)="register()">
       {{ event.registered ? 'Registered' : 'Register Now' }}
     </button>
   </div>

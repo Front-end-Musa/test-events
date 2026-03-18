@@ -1,35 +1,18 @@
 <div class="modal-backdrop" (click)="close()"></div>
-<div
-  class="modal"
-  role="dialog"
-  aria-modal="true"
-  [attr.aria-labelledby]="'eventDialogTitle'"
->
+<div class="modal" role="dialog" aria-modal="true" [attr.aria-labelledby]="'eventDialogTitle'">
   <div class="modal-header">
     <div class="modal-header-text">
       <h2 id="eventDialogTitle">
         {{ mode === 'edit' ? 'Edit event' : 'Create event' }}
       </h2>
-      <p class="modal-subtitle">
-        Capture the key details so your event stays clear and organized.
-      </p>
+      <p class="modal-subtitle">Capture the key details so your event stays clear and organized.</p>
     </div>
-    <button
-      type="button"
-      class="icon-button"
-      aria-label="Close event dialog"
-      (click)="close()"
-    >
+    <button type="button" class="icon-button" aria-label="Close event dialog" (click)="close()">
       ✕
     </button>
   </div>
 
-  <form
-    [formGroup]="form"
-    (ngSubmit)="submit()"
-    class="modal-content"
-    novalidate
-  >
+  <form [formGroup]="form" (ngSubmit)="submit()" class="modal-content" novalidate>
     <div class="modal-body">
       <section class="form-section">
         <h3 class="form-section-title">Primary details</h3>
@@ -52,18 +35,38 @@
           </div>
 
           <div class="form-field">
-            <label for="date">Date &amp; time</label>
+            <label for="date">Date</label>
             <input
               id="date"
               formControlName="date"
-              type="datetime-local"
+              type="date"
               [class.invalid]="form.get('date')?.invalid && form.get('date')?.touched"
             />
-            <small
+            <div
               *ngIf="form.get('date')?.invalid && form.get('date')?.touched"
               class="field-message field-message--error"
             >
-              Please choose when this event takes place.
+              <small *ngIf="form.get('date')?.errors?.['required']"> date is required. </small>
+              <small *ngIf="form.get('date')?.errors?.['dateInPast']">
+                The date can't be in the past.
+              </small>
+            </div>
+          </div>
+
+          <div class="form-field">
+            <label for="time">Time</label>
+            <select
+              id="time"
+              formControlName="time"
+              [class.invalid]="form.get('time')?.invalid && form.get('time')?.touched"
+            >
+              <option *ngFor="let time of timeOptions" [value]="time">{{ time }}</option>
+            </select>
+            <small
+              *ngIf="form.get('time')?.errors?.['required'] && form.get('time')?.touched"
+              class="field-message field-message--error"
+            >
+              Time is required.
             </small>
           </div>
 
@@ -115,18 +118,8 @@
     </div>
 
     <div class="modal-footer">
-      <button
-        type="button"
-        class="btn secondary"
-        (click)="close()"
-      >
-        Cancel
-      </button>
-      <button
-        type="submit"
-        class="btn primary"
-        [disabled]="form.invalid"
-      >
+      <button type="button" class="btn secondary" (click)="close()">Cancel</button>
+      <button type="submit" class="btn primary" [disabled]="form.invalid">
         {{ mode === 'edit' ? 'Save changes' : 'Create event' }}
       </button>
     </div>

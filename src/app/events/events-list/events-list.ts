@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, inject, OnDestroy, OnInit } from '@angular/core';
 import { EventISO } from '../../models/event.model';
 import { EventsFacade } from '../data/events.facade';
 import { EventCard } from './event-card/event-card';
@@ -12,7 +12,8 @@ import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { MatListModule } from '@angular/material/list';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatChipsModule } from '@angular/material/chips';
-import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
+import { Subject } from 'rxjs';
+import { debounceTime, distinctUntilChanged, takeUntil } from 'rxjs/operators';
 
 @Component({
   selector: 'app-events-list',
@@ -34,8 +35,9 @@ import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
   templateUrl: './events-list.html',
   styleUrls: ['./events-list.scss'],
 })
-export class EventsList implements OnInit {
+export class EventsList implements OnInit, OnDestroy {
   private eventsFacade = inject(EventsFacade);
+  private destroy$ = new Subject<void>();
   events: EventISO[] = [];
   plannedEvents: EventISO[] = [];
   completedEvents: EventISO[] = [];
@@ -72,72 +74,38 @@ export class EventsList implements OnInit {
   ngOnInit(): void {
     this.eventsFacade.loadEvents();
 
-    this.eventsFacade.allEvents$.subscribe((events) => {
+    this.eventsFacade.allEvents$.pipe(takeUntil(this.destroy$)).subscribe((events) => {
       this.events = events;
       this.buildEventBuckets();
     });
-    this.eventsFacade.status$.subscribe((status) => {
+
+    this.eventsFacade.status$.pipe(takeUntil(this.destroy$)).subscribe((status) => {
       this.status = status;
     });
-    this.eventsFacade.filterPlanned$
-      .subscribe((events) => {
-        console.log(events);
-      })
-      .unsubscribe();
-    this.eventsFacade.filterCompleted$
-      .subscribe((events) => {
-        console.log(events);
-      })
-      .unsubscribe();
-    this.eventsFacade.filterCanceled$
-      .subscribe((events) => {
-        console.log(events);
-      })
-      .unsubscribe();
-    this.eventsFacade.filterConference$
-      .subscribe((events) => {
-        console.log(events);
-      })
-      .unsubscribe();
-    this.eventsFacade.filterWebinar$
-      .subscribe((events) => {
-        console.log(events);
-      })
-      .unsubscribe();
-    this.eventsFacade.filterMeetings$
-      .subscribe((events) => {
-        console.log(events);
-      })
-      .unsubscribe();
-    
-    this.searchControl.valueChanges.pipe(debounceTime(300), distinctUntilChanged()).subscribe((searchTerm: string | null) => {
-      if (searchTerm) {
-        this.eventsFacade.searchEvents(searchTerm);
-      } else {
-        this.eventsFacade.loadEvents();
-      }
-    });
+
+    this.searchControl.valueChanges
+      .pipe(debounceTime(300), distinctUntilChanged(), takeUntil(this.destroy$))
+      .subscribe((searchTerm: string | null) => {
+        if (searchTerm) {
+          this.eventsFacade.searchEvents(searchTerm);
+        } else {
+          this.eventsFacade.loadEvents();
+        }
+      });
+  }
+
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 
   private buildEventBuckets() {
-    this.eventsFacade.filterPlanned$.subscribe((events) => {
-      this.plannedEvents = events;
-    });
-    this.eventsFacade.filterCompleted$.subscribe((events) => {
-      this.completedEvents = events;
-    });
-    this.eventsFacade.filterCanceled$.subscribe((events) => {
-      this.canceledEvents = events;
-    });
-    this.eventsFacade.filterConference$.subscribe((events) => {
-      this.conferenceEvents = events;
-    });
-    this.eventsFacade.filterWebinar$.subscribe((events) => {
-      this.webinarEvents = events;
-    });
-    this.eventsFacade.filterMeetings$.subscribe((events) => {
-      this.meetingEvents = events;
-    });
+    this.plannedEvents = this.events.filter((event) => event.status === 'Planned');
+    this.completedEvents = this.events.filter((event) => event.status === 'Completed');
+    this.canceledEvents = this.events.filter((event) => event.status === 'Canceled');
+    this.conferenceEvents = this.events.filter((event) => event.category === 'Conference');
+    this.webinarEvents = this.events.filter((event) => event.category === 'Webinar');
+    this.meetingEvents = this.events.filter((event) => event.category === 'Meeting');
   }
 
   get eventsToShow(): EventISO[] {
